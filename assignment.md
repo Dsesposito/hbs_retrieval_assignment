@@ -51,6 +51,7 @@ The online step would be similar to the following:
 
 Other updates I would do for a production search engine would be:
 
+-   Remove stop words for the lexical search.
 -   An autocorrect feature to prevent typos to reduce the search performance.
 -   Use approximate nearest neighbor algorithm. When working with large vector DBs comparing the query vector representation with each vector from the database is prohibitive, the process would have a time complexity of O(n\*d) where n is the amount of vector in the database and d is the dimension of the vectors. The ANN algorithm using HNSW graphs has a logarithmic time complexity O(log n).
 
@@ -67,6 +68,21 @@ Analyzing the distribution of the dataset the following percentages are seen: ex
     - Please implement at least one change you suggest for prompt 1 to demonstrate an improvement in the MAP score. Please document your code changes with comments and markdown cells so we can follow your thought process.
 
     - Please modify the code to make it more object oriented, more flexible to accommodate changes to the retrieval model, and getting it ready for production (such as adding logging, error handling, etc.)
+
+
+The change implemented is the semantic search. The sentence embedding model chosen is 'Snowflake/snowflake-arctic-embed-m' because of it's good performance considering that is a model with 109M parameters. See: https://huggingface.co/Snowflake/snowflake-arctic-embed-m.
+
+This model can embed up to 512 tokens. Analyzing the products description and product name, it's seen that some products have over 4317 characters. A generally rule of thumb used is consider the ratio of characters to token at 3:1, so we have up to 1536 characters that the model will be able to embed without losing information. 
+
+To handle the products with longer information, a text splitter from LangChain is used. The max length is set to 1536 characters and an overlap of 50% is added so no context is lost during splitting.
+
+The semantic search approach is done is three steps:
+    1. The embedding matrix is computed
+    2. For each query a semantic search is done where the query is encoded and then the cosine similarity is computed. If the product has multiple chunks, then the most similar chunk is held.
+    3. Then the results are sorted by descending order of relevance and sliced to top_n=10
+    4. The MAP and Weighted MAP metrics are computed
+
+As expected the semantic search has a better performance over the lexical search. 
 
 Please ensure your version of the notebook is reproducible in its entirety. We recommend restarting the kernel and running all the cells to ensure your results are reproducible before emailing the file back to us.
 
