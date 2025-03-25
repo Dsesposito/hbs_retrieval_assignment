@@ -54,7 +54,7 @@ The online step would be similar to the following:
 Other updates I would do for a production search engine would be:
 
 -   Remove stop words for the lexical search.
--   An autocorrect feature to prevent typos to reduce the search performance.
+-   An autocorrect feature to prevent typos from reducing the search performance.
 -   Use approximate nearest neighbor algorithm. When working with large vector DBs comparing the query vector representation with each vector from the database is prohibitive, the process would have a time complexity of O(n\*d) where n is the amount of vector in the database and d is the dimension of the vectors. The ANN algorithm using HNSW graphs has a logarithmic time complexity O(log n).
 
 ---
