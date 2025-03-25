@@ -73,4 +73,5 @@ tzdata==2025.2
 urllib3==2.3.0
 wcwidth==0.2.13
 zipp==3.21.0
-xformers==0.0.29.post3
+langchain-text-splitters==0.3.7
+einops==0.8.1
